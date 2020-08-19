@@ -6,12 +6,31 @@ const authorText = document.getElementById('author');
 const newQuoterBtn = document.getElementById('new-quote');
 const twitterBtn = document.getElementById('twitter-button');
 
+//loader
+const quoteContainer = document.getElementById('quote-container');
+const loader = document.getElementById('loader')
+
+//show loader
+function loading() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+//remove loader
+function complete() {
+    if (!loader.hidden){
+        quoteContainer.hidden = false;
+        loader.hidden = true;
+    }
+}
+let counter = 0;
 //Getter for the quote form API: https://forismatic.com/en/api/
 async function getQuote() {
-    
+    loading();
     const proxyUrl = 'https://afternoon-inlet-96116.herokuapp.com/';
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
     
+
     try {
 
         const response = await fetch(proxyUrl + apiUrl);
@@ -33,10 +52,20 @@ async function getQuote() {
 
         //Set the quote in his space
         quoteText.innerText = data.quoteText;
-        console.log(data);
+
+        //stop loading and show quote
+        complete();
+        throw new Error('ops')
+
     } catch(err) {
-        getQuote();
-        console.log('Uoppsi', err);
+        if (counter === 10) {
+            console.log('something wrong!')
+        } else {
+            console.log(counter);
+            getQuote();
+
+            counter++;
+        }
     }
 }
 
