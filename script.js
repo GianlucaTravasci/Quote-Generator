@@ -11,25 +11,27 @@ const quoteContainer = document.getElementById('quote-container');
 const loader = document.getElementById('loader')
 
 //show loader
-function loading() {
+function addLoadingSpinner() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
 //remove loader
-function complete() {
+function removeLoadingSpinner() {
     if (!loader.hidden){
         quoteContainer.hidden = false;
         loader.hidden = true;
     }
 }
+
+//if there are so many errors in the catch statement with the getQuot() call everthing is stopped.
+//counter is just a counter in order to stop execute after 10 consecutive errors
 let counter = 0;
 //Getter for the quote form API: https://forismatic.com/en/api/
 async function getQuote() {
-    loading();
+    addLoadingSpinner();
     const proxyUrl = 'https://afternoon-inlet-96116.herokuapp.com/';
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
-    
 
     try {
 
@@ -54,16 +56,13 @@ async function getQuote() {
         quoteText.innerText = data.quoteText;
 
         //stop loading and show quote
-        complete();
-        throw new Error('ops')
+        removeLoadingSpinner();
 
     } catch(err) {
         if (counter === 10) {
             console.log('something wrong!')
         } else {
-            console.log(counter);
             getQuote();
-
             counter++;
         }
     }
