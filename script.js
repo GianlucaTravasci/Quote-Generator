@@ -1,11 +1,15 @@
+//text fields
 const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
+
+//buttons
 const newQuoterBtn = document.getElementById('new-quote');
+const twitterBtn = document.getElementById('twitter-button');
 
 //Getter for the quote form API: https://forismatic.com/en/api/
 async function getQuote() {
     
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const proxyUrl = 'https://afternoon-inlet-96116.herokuapp.com/';
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
     
     try {
@@ -36,7 +40,17 @@ async function getQuote() {
     }
 }
 
+//Quote tweet
+function tweetQuote (){
+    const quote = quoteText.innerText;
+    const author = authorText.innerText;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${quote} - ${author}`;
+    window.open(twitterUrl, '_blanck')
+}
+
 //Event listener
+newQuoterBtn.addEventListener('click', getQuote);
+twitterBtn.addEventListener('click', tweetQuote);
 
 //On page load
 getQuote()
